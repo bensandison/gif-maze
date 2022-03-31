@@ -1,3 +1,8 @@
 export default function Layout({ children }) {
-	return children;
+	return (
+		<>
+			<nav>nav</nav>
+			<main>{children}</main>
+		</>
+	);
 }
