@@ -2,6 +2,7 @@ import Head from "next/head";
 import { Canvas } from "@react-three/fiber";
 import useSWR from "swr";
 import Scene from "../components/scene";
+import Image from "next/image";
 
 // Fetcher function for SWR:
 const fetcher = async (url) => {
@@ -16,14 +17,16 @@ const fetcher = async (url) => {
 		throw error;
 	}
 	// No errror return gif data:
+	console.log(res);
 	return data.data;
 };
 
 export default function Home() {
 	const { data, error } = useSWR(
-		"https://api.giphy.com/v1/gifs/trending?api_key=oPZIFR2MwFPrKArMQHVdBAoumQciakeQ",
+		"https://api.giphy.com/v1/gifs/trending?bundle=low_bandwidth&api_key=oPZIFR2MwFPrKArMQHVdBAoumQciakeQ",
 		fetcher
 	);
+	console.log(data);
 
 	if (error) {
 		return <h4>error: {error.message}</h4>;
@@ -33,17 +36,21 @@ export default function Home() {
 		return <div>loading...</div>;
 	}
 
-	return (
-		<>
-			<Head>
-				<title>GIF Maze!</title>
-				<meta name="description" content="Trawl through a maze of gifs!" />
-				<link rel="icon" href="/favicon.ico" />
-			</Head>
+	return data.map((gifInfo, key) => (
+		<img key={key} height="300" src={gifInfo.images.original.url}></img>
+	));
 
-			<Canvas>
-				<Scene></Scene>
-			</Canvas>
-		</>
-	);
+	// return (
+	// 	<>
+	// 		<Head>
+	// 			<title>GIF Maze!</title>
+	// 			<meta name="description" content="Trawl through a maze of gifs!" />
+	// 			<link rel="icon" href="/favicon.ico" />
+	// 		</Head>
+
+	// 		<Canvas>
+	// 			<Scene></Scene>
+	// 		</Canvas>
+	// 	</>
+	// );
 }
