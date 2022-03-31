@@ -1,8 +1,22 @@
 import Head from "next/head";
-import { useRef, useState } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
+import useSWR from "swr";
+import Scene from "../components/scene";
+
+// Fetcher function for SWR:
+const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 export default function Home() {
+	const { data, error } = useSWR(
+		"https://api.giphy.com/v1/gifs/trending?api_key=oPZIFR2MwFPrKArMQHVdBAoumQciakeQ",
+		fetcher
+	);
+
+	console.log(data);
+
+	if (error) return <div>failed to load data</div>;
+	if (!data) return <div>loading...</div>;
+
 	return (
 		<>
 			<Head>
@@ -10,47 +24,10 @@ export default function Home() {
 				<meta name="description" content="Trawl through a maze of gifs!" />
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
+
 			<Canvas>
-				<Scene1></Scene1>
+				<Scene></Scene>
 			</Canvas>
 		</>
-	);
-}
-
-function Scene1() {
-	return (
-		<>
-			<color attach="background" args={["red"]} />
-			<scene>
-				<ambientLight />
-				<pointLight position={[10, 10, 10]} />
-				<Box position={[-1.2, 0, 0]} />
-				<Box position={[1.2, 0, 0]} />
-			</scene>
-		</>
-	);
-}
-
-function Box(props) {
-	// This reference gives us direct access to the THREE.Mesh object
-	const ref = useRef();
-	// Hold state for hovered and clicked events
-	const [hovered, hover] = useState(false);
-	const [clicked, click] = useState(false);
-	// Subscribe this component to the render-loop, rotate the mesh every frame
-	useFrame((state, delta) => (ref.current.rotation.x += 0.01));
-	// Return the view, these are regular Threejs elements expressed in JSX
-	return (
-		<mesh
-			{...props}
-			ref={ref}
-			scale={clicked ? 1.5 : 1}
-			onClick={(event) => click(!clicked)}
-			onPointerOver={(event) => hover(true)}
-			onPointerOut={(event) => hover(false)}
-		>
-			<boxGeometry args={[1, 1, 1]} />
-			<meshStandardMaterial color={hovered ? "hotpink" : "orange"} />
-		</mesh>
 	);
 }
