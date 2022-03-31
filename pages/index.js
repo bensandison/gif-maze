@@ -23,7 +23,7 @@ const fetcher = async (url) => {
 
 export default function Home() {
 	const { data, error } = useSWR(
-		"https://api.giphy.com/v1/gifs/trending?bundle=low_bandwidth&api_key=oPZIFR2MwFPrKArMQHVdBAoumQciakeQ",
+		"https://api.giphy.com/v1/gifs/trending?bundle=low_bandwidth1&api_key=oPZIFR2MwFPrKArMQHVdBAoumQciakeQ",
 		fetcher
 	);
 	console.log(data);
@@ -37,7 +37,14 @@ export default function Home() {
 	}
 
 	return data.map((gifInfo, key) => (
-		<img key={key} height="300" src={gifInfo.images.original.url}></img>
+		<video
+			autoPlay
+			loop
+			muted
+			key={key}
+			height="300"
+			src={gifInfo.images.original_mp4.mp4}
+		></video>
 	));
 
 	// return (
