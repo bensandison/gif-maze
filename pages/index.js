@@ -4,7 +4,20 @@ import useSWR from "swr";
 import Scene from "../components/scene";
 
 // Fetcher function for SWR:
-const fetcher = (...args) => fetch(...args).then((res) => res.json());
+const fetcher = async (url) => {
+	const res = await fetch(url);
+	const data = await res.json();
+
+	// If api returns an error:
+	if (!res.ok) {
+		const error = new Error("An error occured while fetching data");
+		// Set error message if api returned one
+		if (data.message) error.message = data.message;
+		throw error;
+	}
+	// No errror return gif data:
+	return data.data;
+};
 
 export default function Home() {
 	const { data, error } = useSWR(
@@ -12,10 +25,13 @@ export default function Home() {
 		fetcher
 	);
 
-	console.log(data);
+	if (error) {
+		return <h4>error: {error.message}</h4>;
+	}
 
-	if (error) return <div>failed to load data</div>;
-	if (!data) return <div>loading...</div>;
+	if (!data) {
+		return <div>loading...</div>;
+	}
 
 	return (
 		<>
