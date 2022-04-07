@@ -2,7 +2,7 @@ import Head from "next/head";
 import { Canvas } from "@react-three/fiber";
 import useSWR from "swr";
 import Scene from "../components/scene";
-import Image from "next/image";
+import Wall from "../components/wall";
 
 // Fetcher function for SWR:
 const fetcher = async (url) => {
@@ -26,6 +26,7 @@ export default function Home() {
 		"https://api.giphy.com/v1/gifs/trending?bundle=low_bandwidth1&api_key=oPZIFR2MwFPrKArMQHVdBAoumQciakeQ",
 		fetcher
 	);
+	console.log("hi");
 	console.log(data);
 
 	if (error) {
@@ -36,28 +37,24 @@ export default function Home() {
 		return <div>loading...</div>;
 	}
 
-	return data.map((gifInfo, key) => (
-		<video
-			autoPlay
-			loop
-			muted
-			key={key}
-			height="300"
-			src={gifInfo.images.original_mp4.mp4}
-		></video>
-	));
-
-	// return (
-	// 	<>
-	// 		<Head>
-	// 			<title>GIF Maze!</title>
-	// 			<meta name="description" content="Trawl through a maze of gifs!" />
-	// 			<link rel="icon" href="/favicon.ico" />
-	// 		</Head>
-
-	// 		<Canvas>
-	// 			<Scene></Scene>
-	// 		</Canvas>
-	// 	</>
-	// );
+	return (
+		<>
+			<Head>
+				<title>GIF Maze!</title>
+				<meta name="description" content="Trawl through a maze of gifs!" />
+				<link rel="icon" href="/favicon.ico" />
+			</Head>
+			<Canvas>
+				<Scene>
+					{data.map((gifInfo, key) => (
+						<Wall
+							url={gifInfo.images.original_mp4.mp4}
+							xPos={key}
+							key={key}
+						></Wall>
+					))}
+				</Scene>
+			</Canvas>
+		</>
+	);
 }

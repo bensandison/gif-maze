@@ -1,14 +1,22 @@
-import Box from "./box";
+import {
+	FirstPersonControls,
+	PointerLockControls,
+	OrbitControls,
+	FlyControls,
+} from "@react-three/drei";
 
-export default function Scene() {
+export default function Scene(props) {
 	return (
 		<>
-			<color attach="background" args={["red"]} />
+			<color attach="background" args={["gray"]} />
+			<FirstPersonControls
+				lookVertical={false}
+				lookSpeed={0.5}
+				movementSpeed={2}
+			/>
 			<scene>
 				<ambientLight />
-				<pointLight position={[10, 10, 10]} />
-				<Box position={[-1.2, 0, 0]} />
-				<Box position={[1.2, 0, 0]} />
+				{props.children}
 			</scene>
 		</>
 	);
