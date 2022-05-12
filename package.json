@@ -13,6 +13,7 @@
 		"next": "12.1.2",
 		"react": "18.0.0",
 		"react-dom": "18.0.0",
+		"react-hotkeys-hook": "^3.4.4",
 		"swr": "^1.2.2",
 		"three": "^0.139.0"
 	},

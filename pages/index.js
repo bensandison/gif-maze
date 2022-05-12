@@ -1,8 +1,7 @@
 import Head from "next/head";
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useThree } from "@react-three/fiber";
 import useSWR from "swr";
 import Scene from "../components/scene";
-import Wall from "../components/wall";
 
 // Fetcher function for SWR:
 const fetcher = async (url) => {
@@ -26,8 +25,6 @@ export default function Home() {
 		"https://api.giphy.com/v1/gifs/trending?bundle=low_bandwidth1&api_key=oPZIFR2MwFPrKArMQHVdBAoumQciakeQ",
 		fetcher
 	);
-	console.log("hi");
-	console.log(data);
 
 	if (error) {
 		return <h4>error: {error.message}</h4>;
@@ -44,16 +41,8 @@ export default function Home() {
 				<meta name="description" content="Trawl through a maze of gifs!" />
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
-			<Canvas>
-				<Scene>
-					{data.map((gifInfo, key) => (
-						<Wall
-							url={gifInfo.images.original_mp4.mp4}
-							xPos={key}
-							key={key}
-						></Wall>
-					))}
-				</Scene>
+			<Canvas camera={{ position: [2, 0, 0], fov: 100 }}>
+				<Scene data={data} error={error}></Scene>
 			</Canvas>
 		</>
 	);
