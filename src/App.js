@@ -2,51 +2,10 @@ import { Suspense, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Loader } from "@react-three/drei";
 import { FPSControls } from "react-three-fpscontrols";
-
-import Wall from "./components/wall";
-
-async function fetchData() {
-	const url =
-		"https://api.giphy.com/v1/gifs/trending?bundle=low_bandwidth1&api_key=oPZIFR2MwFPrKArMQHVdBAoumQciakeQ";
-
-	const res = await fetch(url);
-	const data = await res.json();
-
-	if (!res.ok) {
-		console.log("An error occured while fetching gifs");
-
-		// Return an error from fn
-		return [null, true];
-	}
-
-	return [data.data, false];
-}
+import Maze from "./components/maze";
+import * as THREE from "three";
 
 export default function App() {
-	const [data, setData] = useState(null);
-	const [error, setError] = useState(false);
-
-	async function fetchData() {
-		const url =
-			"https://api.giphy.com/v1/gifs/trending?bundle=low_bandwidth1&api_key=oPZIFR2MwFPrKArMQHVdBAoumQciakeQ";
-
-		const res = await fetch(url);
-		const data = await res.json();
-
-		if (!res.ok) {
-			console.log("An error occured while fetching gifs");
-
-			setError(true);
-		}
-
-		setData(data.data);
-	}
-	fetchData();
-
-	console.log(data);
-
-	if (!data) return <h1>loading</h1>;
-
 	return (
 		<>
 			<Canvas shadows dpr={[1, 2]}>
@@ -63,16 +22,15 @@ export default function App() {
 							target: [0, 0.1, 0],
 						}}
 					/>
-
-					{/* <color attach="background" args={["red"]} /> */}
 					<ambientLight />
-					{data.map((gifInfo, key) => (
-						<Wall
-							url={gifInfo.images.original_mp4.mp4}
-							xPos={key}
-							key={key}
-						></Wall>
-					))}
+					<mesh rotation={[Math.PI / 2, 0, 0]} position={[0, -1.5, 0]}>
+						<planeGeometry args={[100, 100]}></planeGeometry>
+						<meshBasicMaterial
+							color="black"
+							side={THREE.DoubleSide}
+						></meshBasicMaterial>
+					</mesh>
+					<Maze></Maze>
 				</Suspense>
 			</Canvas>
 			<Loader />
