@@ -22,11 +22,11 @@ export default function App() {
 							target: [0, 0.1, 0],
 						}}
 					/>
-					<ambientLight />
+					<directionalLight intensity={0.6} position={[0, 2, 2]} castShadow />
 					<mesh rotation={[Math.PI / 2, 0, 0]} position={[0, -1.5, 0]}>
-						<planeGeometry args={[100, 100]}></planeGeometry>
+						<planeGeometry args={[200, 200]}></planeGeometry>
 						<meshBasicMaterial
-							color="black"
+							color="#333"
 							side={THREE.DoubleSide}
 						></meshBasicMaterial>
 					</mesh>
