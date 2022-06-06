@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import * as THREE from "three";
 
-export default function Wall({ url, xPos }) {
-	const size = 3;
-
+export default function Wall({ url, position, isRotate, size }) {
 	// Create video dom element:
 	const [video] = useState(() =>
 		Object.assign(document.createElement("video"), {
@@ -17,8 +15,10 @@ export default function Wall({ url, xPos }) {
 	// Play video when video loads
 	useEffect(() => void video.play(), [video]);
 
+	// Rotate based on isRotate
+	const rotDeg = Math.PI / 2;
 	return (
-		<mesh position={[0, 0, xPos * size]} rotation={[0, Math.PI / 2, 0]}>
+		<mesh position={position} rotation={[0, isRotate ? 0 : rotDeg, 0]}>
 			<planeGeometry args={[size, size]}></planeGeometry>
 			<meshBasicMaterial side={THREE.DoubleSide} toneMapped={false}>
 				<videoTexture
