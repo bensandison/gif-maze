@@ -29,8 +29,22 @@ function MazeThree({ maze, query }) {
 	useEffect(() => {
 		fetchData(query, setData, setError); //TODO: parse query
 	}, [query]);
-	console.log(data);
 
+	// Function gets next gif in array;
+	let gifIndex = -1;
+	function getGif() {
+		// increment to next gif:
+		gifIndex++;
+
+		// Return if there are no gifs
+		if (!data || !data.length || gifIndex > data.length - 1) return;
+		if (!data[gifIndex]) return;
+		if (!data[gifIndex].images) return;
+
+		return data[gifIndex].images.looping.mp4;
+	}
+
+	// Offset for calculating wall position
 	const offset = noOfCells * -0.5 * cellSize + cellSize * 0.5;
 
 	// Generate Maze:
@@ -49,7 +63,7 @@ function MazeThree({ maze, query }) {
 							offset + y * cellSize,
 						]}
 						size={cellSize}
-						url="https://media4.giphy.com/media/MBNihviBMEKb7XEF2N/giphy.mp4?cid=a01a18b282ptgazdmivszlngp8gyvifzspg538kpi10dltvc&rid=giphy.mp4&ct=g"
+						url={getGif()}
 					/>
 				);
 			}
@@ -64,7 +78,7 @@ function MazeThree({ maze, query }) {
 						]}
 						isRotate={true}
 						size={cellSize}
-						url="https://media0.giphy.com/media/2TOi6OJP04FDu1x34F/giphy.mp4?cid=a01a18b29csc64w6x6uub4sg34i1q502wd1tf4tuql9dtvsp&rid=giphy.mp4&ct=g"
+						url={getGif()}
 					/>
 				);
 			}
@@ -79,7 +93,7 @@ function MazeThree({ maze, query }) {
 							offset + y * cellSize,
 						]}
 						size={cellSize}
-						url="https://media4.giphy.com/media/MBNihviBMEKb7XEF2N/giphy.mp4?cid=a01a18b282ptgazdmivszlngp8gyvifzspg538kpi10dltvc&rid=giphy.mp4&ct=g"
+						url={getGif()}
 					/>
 				);
 			}
@@ -94,7 +108,7 @@ function MazeThree({ maze, query }) {
 						]}
 						isRotate={true}
 						size={cellSize}
-						url="https://media0.giphy.com/media/2TOi6OJP04FDu1x34F/giphy.mp4?cid=a01a18b29csc64w6x6uub4sg34i1q502wd1tf4tuql9dtvsp&rid=giphy.mp4&ct=g"
+						url={getGif()}
 					/>
 				);
 			}
