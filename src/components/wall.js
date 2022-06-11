@@ -10,6 +10,7 @@ export default function Wall({ url, position, isRotate, size }) {
 
 		setVideo(() => {
 			return Object.assign(document.createElement("video"), {
+				class: { position },
 				src: url,
 				crossOrigin: "anonymous",
 				loop: true,
