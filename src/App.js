@@ -1,31 +1,24 @@
+import { Box, Flex, Text } from "@chakra-ui/react";
 import Main from "./components/main";
 
 export default function App() {
 	return (
-		<>
-			<nav
-				style={{
-					height: "10vh",
-					display: "flex",
-					alignItems: "center",
-					gap: 5,
-					paddingLeft: 20,
-					paddingRight: 20,
-				}}
+		<Box position="relative">
+			<Flex
+				as="nav"
+				position="absolute"
+				w="100%"
+				bg="red"
+				zIndex={2}
+				paddingX={5}
 			>
-				<h1
-					style={{
-						margin: 0,
-						fontSize: 40,
-						fontFamily: "monospace",
-					}}
-				>
-					GifMaze!
-				</h1>
-			</nav>
-			<main style={{ height: "100vh" }}>
+				<Text fontFamily="mono" fontSize="5xl">
+					GifMaze
+				</Text>
+			</Flex>
+			<Box as="main" h="100vh">
 				<Main></Main>
-			</main>
-		</>
+			</Box>
+		</Box>
 	);
 }
