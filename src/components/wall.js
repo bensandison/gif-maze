@@ -18,7 +18,6 @@ export default function Wall({ url, position, isRotate, size }) {
 			});
 		});
 	}, [url]);
-	console.log(video);
 
 	useEffect(() => {
 		if (!video) return;
