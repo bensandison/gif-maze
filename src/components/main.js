@@ -1,18 +1,17 @@
 import { Suspense, useState } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Loader } from "@react-three/drei";
 import { FPSControls } from "react-three-fpscontrols";
 import Maze from "./maze";
 import * as THREE from "three";
 
-export default function Main() {
+export default function Main({ isSearchFocused }) {
 	return (
 		<>
 			<Canvas shadows dpr={[1, 2]}>
 				<Suspense fallback={null}>
 					<FPSControls
 						enableJoystick={true}
-						enableKeyboard={true}
+						enableKeyboard={isSearchFocused ? false : true}
 						camProps={{
 							makeDefault: true,
 							fov: 80,
@@ -33,7 +32,6 @@ export default function Main() {
 					<Maze></Maze>
 				</Suspense>
 			</Canvas>
-			<Loader />
 		</>
 	);
 }

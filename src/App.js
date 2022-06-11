@@ -1,16 +1,32 @@
 import {
 	Box,
-	Button,
+	IconButton,
 	Flex,
 	Input,
 	InputGroup,
 	InputRightElement,
 	Text,
+	useBoolean,
 } from "@chakra-ui/react";
 import Main from "./components/main";
 import { SearchIcon } from "@chakra-ui/icons";
+import { useRef, useState } from "react";
 
 export default function App() {
+	const [isFocused, setIsFocused] = useBoolean(false);
+	const [isError, setIsError] = useBoolean(false);
+	const [isSearching, setIsSearching] = useBoolean(false);
+	const [searchQuery, setSearchQuery] = useState("");
+
+	function handleSearchSubmit() {}
+
+	function handleOnChange(e) {
+		setSearchQuery(e.target.value);
+	}
+
+	// Submit button reference:
+	const submitRef = useRef(null);
+
 	return (
 		<Box position="relative">
 			<Flex
@@ -26,21 +42,42 @@ export default function App() {
 				<Text fontFamily="mono" fontSize="5xl">
 					GifMaze
 				</Text>
-				<InputGroup maxW={500} background="white" borderRadius={10}>
+				<InputGroup
+					as="form"
+					maxW={500}
+					background="white"
+					borderRadius={10}
+					onSubmit={(e) => {
+						e.preventDefault();
+						handleSearchSubmit();
+					}}
+					onFocus={setIsFocused.on}
+					onBlur={setIsFocused.off}
+				>
 					<Input
+						value={searchQuery}
+						onChange={handleOnChange}
+						isInvalid={isError}
 						size="lg"
 						variant="filled"
 						placeholder="Gif Search Query"
 					></Input>
-					<InputRightElement h="100%">
-						<Button>
-							<SearchIcon></SearchIcon>
-						</Button>
+					<InputRightElement h="100%" pr="2">
+						{isSearching ? (
+							<Spinner></Spinner>
+						) : (
+							<IconButton
+								ref={submitRef}
+								variant="ghost"
+								icon={<SearchIcon />}
+								type="submit"
+							></IconButton>
+						)}
 					</InputRightElement>
 				</InputGroup>
 			</Flex>
 			<Box as="main" h="100vh">
-				<Main></Main>
+				<Main isSearchFocused={isFocused}></Main>
 			</Box>
 		</Box>
 	);
