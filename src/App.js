@@ -1,39 +1,31 @@
-import { Suspense, useState } from "react";
-import { Canvas } from "@react-three/fiber";
-import { Loader } from "@react-three/drei";
-import { FPSControls } from "react-three-fpscontrols";
-import Maze from "./components/maze";
-import * as THREE from "three";
+import Main from "./components/main";
 
 export default function App() {
 	return (
 		<>
-			<Canvas shadows dpr={[1, 2]}>
-				<Suspense fallback={null}>
-					<FPSControls
-						enableJoystick={true}
-						enableKeyboard={true}
-						camProps={{
-							makeDefault: true,
-							fov: 80,
-							position: [0, -0.1, 0],
-						}}
-						orbitProps={{
-							target: [0, -0.1, 0],
-						}}
-					/>
-					<directionalLight intensity={0.6} position={[0, 2, 2]} castShadow />
-					<mesh rotation={[Math.PI / 2, 0, 0]} position={[0, -2.5, 0]}>
-						<planeGeometry args={[200, 200]}></planeGeometry>
-						<meshBasicMaterial
-							color="#333"
-							side={THREE.DoubleSide}
-						></meshBasicMaterial>
-					</mesh>
-					<Maze></Maze>
-				</Suspense>
-			</Canvas>
-			<Loader />
+			<nav
+				style={{
+					height: "10vh",
+					display: "flex",
+					alignItems: "center",
+					gap: 5,
+					paddingLeft: 20,
+					paddingRight: 20,
+				}}
+			>
+				<h1
+					style={{
+						margin: 0,
+						fontSize: 40,
+						fontFamily: "monospace",
+					}}
+				>
+					GifMaze!
+				</h1>
+			</nav>
+			<main style={{ height: "100vh" }}>
+				<Main></Main>
+			</main>
 		</>
 	);
 }
