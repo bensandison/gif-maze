@@ -4,7 +4,7 @@ import { mazeGenerator } from "@miketmoore/maze-generator";
 
 const cellSize = 3;
 const halfCell = cellSize / 2;
-const noOfCells = 5;
+const noOfCells = 9;
 
 // Offset for calculating wall position
 const offset = noOfCells * -0.5 * cellSize + cellSize * 0.5;
@@ -26,13 +26,21 @@ export default function Maze({ data }) {
 }
 
 function MazeThree({ maze, data }) {
-	console.log(data);
+	const [mazeWalls, setMazeWalls] = useState([]);
+
 	useEffect(() => {
-		genMaze();
+		// Clear old walls with new data:
+		setMazeWalls([]);
 	}, [data]);
 
+	useEffect(() => {
+		// Check array has been emptied and there is data before generating maze:
+		if (!mazeWalls.length && data) {
+			genMaze();
+		}
+	}, [mazeWalls]);
+
 	// Generate Maze:
-	const [mazeWalls, setMazeWalls] = useState([]);
 	function pushWall(wall) {
 		setMazeWalls((wallsArr) => {
 			return [...wallsArr, wall];
