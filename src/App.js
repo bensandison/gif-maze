@@ -25,9 +25,11 @@ export default function App() {
 	// Fetch data:
 	useEffect(() => {
 		fetchData(searchQuery, setData, setIsError, setIsLoading); //TODO: parse query
-	}, [searchQuery]);
+	}, []);
 
-	function handleSearchSubmit() {}
+	function handleSearchSubmit() {
+		fetchData(searchQuery, setData, setIsError, setIsLoading); //TODO: parse query
+	}
 
 	function handleOnChange(e) {
 		setSearchQuery(e.target.value);
@@ -37,10 +39,9 @@ export default function App() {
 	const submitRef = useRef(null);
 
 	return (
-		<Box position="relative">
+		<Box h="100vh">
 			<Flex
 				as="nav"
-				position="absolute"
 				w="100%"
 				bg="rgba(250,0,250,0.6)"
 				zIndex={2}
@@ -85,7 +86,7 @@ export default function App() {
 					</InputRightElement>
 				</InputGroup>
 			</Flex>
-			<Box as="main" h="100vh">
+			<Box as="main" h="100%">
 				<Main isSearchFocused={isFocused} data={data}></Main>
 			</Box>
 		</Box>
@@ -93,13 +94,21 @@ export default function App() {
 }
 
 async function fetchData(query, setData, setIsError, setIsLoading) {
-	//TODO: set change urls:
+	console.log(query);
+	let url;
+	if (query === "") {
+		// Search trending gifs:
+		url = `https://api.giphy.com/v1/gifs/trending?limit=50&bundle=low_bandwidth1&api_key=oPZIFR2MwFPrKArMQHVdBAoumQciakeQ`;
+	} else {
+		// Search with query:
+		url = `https://api.giphy.com/v1/gifs/search?api_key=oPZIFR2MwFPrKArMQHVdBAoumQciakeQ&limit=50&lang=en&q=${query}`;
+	}
 
 	// Can only fetch 50 posts at a time;
 	const offsetArr = [0, 50, 100];
 	let dataArr = [];
 	for (const offset of offsetArr) {
-		let url = `https://api.giphy.com/v1/gifs/trending?offset=${offset}&limit=50&bundle=low_bandwidth1&api_key=oPZIFR2MwFPrKArMQHVdBAoumQciakeQ`;
+		url = url + `&offset=${offset}`;
 		const res = await fetch(url);
 
 		if (!res.ok) {
