@@ -4,47 +4,30 @@ import { mazeGenerator } from "@miketmoore/maze-generator";
 
 const cellSize = 3;
 const halfCell = cellSize / 2;
-const noOfCells = 10;
+const noOfCells = 9;
 
-export default function Maze() {
+// Offset for calculating wall position
+const offset = noOfCells * -0.5 * cellSize + cellSize * 0.5;
+
+export default function Maze({ data }) {
 	const [maze, setMaze] = useState(null);
 
 	useEffect(() => {
-		const m = mazeGenerator({
-			rows: noOfCells,
-			columns: noOfCells,
-		});
-
-		setMaze(<MazeThree maze={m}></MazeThree>);
+		setMaze(
+			mazeGenerator({
+				rows: noOfCells,
+				columns: noOfCells,
+			})
+		);
 	}, []);
 
-	return maze;
+	if (!maze) return null;
+	return <MazeThree maze={maze} data={data}></MazeThree>;
 }
 
-function MazeThree({ maze, query }) {
-	// For fetching gifs:
-	const [data, setData] = useState();
-	const [error, setError] = useState();
-	// Fetch data when query changes:
-	useEffect(() => {
-		fetchData(query, setData, setError); //TODO: parse query
-	}, [query]);
-
-	// Function gets next gif in array;
-	function getGif(index) {
-		console.log(index);
-		// Return null if there are no gifs:
-		if (!data || !data.length || index > data.length - 1) return;
-		if (!data[index]) return;
-		if (!data[index].images) return;
-
-		let url = data[index].images.looping.mp4;
-		console.log(index, url);
-		return url;
-	}
-
-	// Offset for calculating wall position
-	const offset = noOfCells * -0.5 * cellSize + cellSize * 0.5;
+function MazeThree({ maze, data }) {
+	if (!data) return null;
+	console.log("hi");
 
 	// Generate Maze:
 	let mazeWalls = [];
@@ -64,7 +47,7 @@ function MazeThree({ maze, query }) {
 							offset + y * cellSize,
 						]}
 						size={cellSize}
-						url={getGif(index)}
+						url={data[index].images.looping.mp4}
 					/>
 				);
 			}
@@ -80,7 +63,7 @@ function MazeThree({ maze, query }) {
 						]}
 						isRotate={true}
 						size={cellSize}
-						url={getGif(index)}
+						url={data[index].images.looping.mp4}
 					/>
 				);
 			}
@@ -96,7 +79,7 @@ function MazeThree({ maze, query }) {
 							offset + y * cellSize,
 						]}
 						size={cellSize}
-						url={getGif(index)}
+						url={data[index].images.looping.mp4}
 					/>
 				);
 			}
@@ -112,7 +95,7 @@ function MazeThree({ maze, query }) {
 						]}
 						isRotate={true}
 						size={cellSize}
-						url={getGif(index)}
+						url={data[index].images.looping.mp4}
 					/>
 				);
 			}
@@ -120,34 +103,4 @@ function MazeThree({ maze, query }) {
 	});
 
 	return <group>{mazeWalls}</group>;
-}
-
-async function fetchData(query, setData, setError) {
-	//TODO: set change urls:
-
-	const offsetArr = [0, 50, 100];
-
-	let dataArr = [];
-	for (const offset of offsetArr) {
-		const [data, error] = await fetchBatch(offset);
-		if (error) break;
-		dataArr.push(...data);
-	}
-	if (!dataArr) setError(true);
-
-	setData(dataArr);
-}
-
-async function fetchBatch(offset) {
-	let url = `https://api.giphy.com/v1/gifs/trending?offset=${offset}&limit=50&bundle=low_bandwidth1&api_key=oPZIFR2MwFPrKArMQHVdBAoumQciakeQ`;
-
-	const res = await fetch(url);
-	const data = await res.json();
-
-	if (!res.ok) {
-		console.log("An error occured while fetching gifs");
-
-		return [null, true];
-	}
-	return [data.data, false];
 }

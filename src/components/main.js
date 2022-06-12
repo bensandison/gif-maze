@@ -4,7 +4,7 @@ import { FPSControls } from "react-three-fpscontrols";
 import Maze from "./maze";
 import * as THREE from "three";
 
-export default function Main({ isSearchFocused }) {
+export default function Main({ isSearchFocused, data }) {
 	return (
 		<>
 			<Canvas shadows dpr={[1, 2]}>
@@ -29,7 +29,7 @@ export default function Main({ isSearchFocused }) {
 							side={THREE.DoubleSide}
 						></meshBasicMaterial>
 					</mesh>
-					<Maze></Maze>
+					<Maze data={data}></Maze>
 				</Suspense>
 			</Canvas>
 		</>

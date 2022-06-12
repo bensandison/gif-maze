@@ -10,13 +10,22 @@ import {
 } from "@chakra-ui/react";
 import Main from "./components/main";
 import { SearchIcon } from "@chakra-ui/icons";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function App() {
 	const [isFocused, setIsFocused] = useBoolean(false);
-	const [isError, setIsError] = useBoolean(false);
 	const [isSearching, setIsSearching] = useBoolean(false);
 	const [searchQuery, setSearchQuery] = useState("");
+
+	// For data fetching:
+	const [data, setData] = useState(null);
+	const [isError, setIsError] = useBoolean(false);
+	const [isLoading, setIsLoading] = useBoolean(true);
+
+	// Fetch data:
+	useEffect(() => {
+		fetchData(searchQuery, setData, setIsError, setIsLoading); //TODO: parse query
+	}, [searchQuery]);
 
 	function handleSearchSubmit() {}
 
@@ -77,8 +86,36 @@ export default function App() {
 				</InputGroup>
 			</Flex>
 			<Box as="main" h="100vh">
-				<Main isSearchFocused={isFocused}></Main>
+				<Main isSearchFocused={isFocused} data={data}></Main>
 			</Box>
 		</Box>
 	);
 }
+
+async function fetchData(query, setData, setIsError, setIsLoading) {
+	//TODO: set change urls:
+
+	// Can only fetch 50 posts at a time;
+	const offsetArr = [0, 50, 100];
+	let dataArr = [];
+	for (const offset of offsetArr) {
+		let url = `https://api.giphy.com/v1/gifs/trending?offset=${offset}&limit=50&bundle=low_bandwidth1&api_key=oPZIFR2MwFPrKArMQHVdBAoumQciakeQ`;
+		const res = await fetch(url);
+
+		if (!res.ok) {
+			console.log("An error occured while fetching gifs");
+			break;
+		}
+
+		let data = await res.json();
+		data = data.data;
+
+		dataArr.push(...data);
+	}
+	if (!dataArr) setIsError.on;
+
+	setIsLoading.off;
+	setData(dataArr);
+}
+
+async function fetchBatch(offset) {}
