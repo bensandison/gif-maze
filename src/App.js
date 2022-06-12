@@ -45,16 +45,17 @@ export default function App() {
 				w="100%"
 				bg="rgba(250,0,250,0.6)"
 				zIndex={2}
-				paddingX={5}
+				paddingX={[2, 3, 5]}
 				alignItems="center"
 				justifyContent="space-between"
+				h={["7%", "10%", "10%"]}
 			>
-				<Text fontFamily="mono" fontSize="5xl">
+				<Text fontFamily="mono" fontSize={["lg", "5xl", "5xl"]} mr={4}>
 					GifMaze
 				</Text>
 				<InputGroup
 					as="form"
-					maxW={500}
+					maxW={600}
 					background="white"
 					borderRadius={10}
 					onSubmit={(e) => {
@@ -68,7 +69,7 @@ export default function App() {
 						value={searchQuery}
 						onChange={handleOnChange}
 						isInvalid={isError}
-						size="lg"
+						size={["sm", "lg", "lg"]}
 						variant="filled"
 						placeholder="Gif Search Query"
 					></Input>
